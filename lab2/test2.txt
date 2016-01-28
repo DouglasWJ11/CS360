@@ -1,8 +1,0 @@
-Test2 of text
-
-This is just a lonely
-text file
-
-
-It appears that this test
-worked.

@@ -3,7 +3,10 @@
 #include <stdlib.h>
 #include <iostream>
 #include <semaphore.h>
-
+#include <queue>
+using namespace std;
+#define NTHREADS 10
+#define NQUEUE 20
 sem_t empty, full, mutex;
 class myqueue{
 	std::queue<int> stlqueue;
@@ -27,14 +30,16 @@ class myqueue{
 } sockqueue;
 
 void *howdy(void *arg){
-	long tid;
-	tid=(long) arg;
-	printf("Howdy %d\n",tid);
+	for(;;){
+		cout<<"GOT "<<sockqueue.pop()<<endl;
+	}
+
+//	long tid;
+//	tid=(long) arg;
+//	printf("Howdy %d\n",tid);
 }
 
 int main(){
-#define NTHREADS 10;
-#define NQUEUE 20;
 
 	long threadid;
 	pthread_t threads[NTHREADS];
@@ -46,13 +51,13 @@ int main(){
 		sockqueue.push(i);
 	}
 
-	for(inti=0;i<nQUEUE;i++){
-		std::cout<<"GOT "<<sockqueue.pop()<<std::endl;
+	for(int i=0;i<NQUEUE;i++){
+		cout<<"GOT "<<sockqueue.pop()<<endl;
 	}
 
 	exit(0);
 	for(threadid=0;threadid<NTHREADS;threadid++){
-		pthread_creat(&threads[threadid], NULL, howdy, (void*)threadid);
+		pthread_create(&threads[threadid], NULL, howdy, (void*)threadid);
 	}
 	pthread_exit(NULL);
 }

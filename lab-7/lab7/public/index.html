@@ -1,0 +1,52 @@
+<html>
+<head>
+<title>City Finder</title>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script>
+	$(document).ready(function() {
+		$( "#cityfield" ).keyup(function() {
+		var url = "https://students.cs.byu.edu/~clement/CS360/ajax/getcity.cgi?q="+$("#cityfield").val();
+			$.getJSON(url,function(data){
+				var everything;
+				everything = "<ul>";
+				$.each(data, function(i,item){
+				everything+="<li> " +data[i].city;
+				});
+
+				everything+="</ul>";
+				$("#txtHint").html(everything);
+			});
+		});
+		$("#button").click(function(e){
+			var value = $("#cityfield").val();
+			console.log(value);
+	 		e.preventDefault();
+			$("#dispcity").text(value);
+			var myurl= "https://api.wunderground.com/api/383c8d4b5e128d0d/geolookup/conditions/q/UT/";
+			  myurl += value;
+			  myurl += ".json";
+			  console.log(myurl);
+			  $.ajax({
+			    url : myurl,
+			    dataType : "jsonp",
+			    success : function(data) {
+			        console.log(data);
+			    }
+ 			  }
+		});
+	});
+</script>
+</head>
+<body>
+<form>
+Enter A Utah City: <input type="text" id="cityfield" value=""><br>
+Suggestion: <span id="txtHint">Empty</span>
+<input id="button" type="submit" value="Submit">
+</form>
+<p>City</p>
+<textarea id="dispcity">No City</textarea>
+<p>Current Weather</p>
+<div id="weather">No weather</div>
+
+</body>
+</html>

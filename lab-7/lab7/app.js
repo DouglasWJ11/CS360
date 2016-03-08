@@ -1,29 +1,34 @@
+var fs = require('fs')
 var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
-var routes = require('./routes/index');
-var users = require('./routes/users');
 
 var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+var cities =[]
+app.get("/getcity", function(req, res){
+	var prefix = req.query.q
+	var arr =  cities.reduce(function (arr,city){
+		if(city.substring(prefix.length,0)===prefix){
+			arr.push({'city': city})
+		}
+		return arr
+	},[])
+	res.send(arr)
+})
 
-app.use('/', routes);
-app.use('/users', users);
+app.get('/joke', function(req,res){
+	request('http://api.icndb.com/jokes/random', function(err, response, body){
+		var datJSON.parse(body)
+		res.send(data.value.joke)
+		})
+}) 
+fs.readFile('./staticCity.txt', 'utf8', function(err, data){
+	cities=data.split('\n')
+})
+app.listen(3000)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -57,4 +62,3 @@ app.use(function(err, req, res, next) {
 });
 
 
-module.exports = app;
